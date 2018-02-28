@@ -25,6 +25,16 @@ body{
 	font-family:Arial, Helvetica, sans-serif;
 	background:url(../images/body_bg3.jpg);
 }
+/*
+
+  My custom CSS 
+
+*/
+
+.productDetails{
+	margin-top: 18px;
+}
+
 .wrap{
 	/*width:78%;*/
 	margin:0 auto;
