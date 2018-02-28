@@ -1,0 +1,255 @@
+<?php 
+
+$filepath = realpath(dirname( __FILE__ ) );
+
+ include_once ($filepath.'/../lib/Database.php');
+ include_once ($filepath.'/../helpers/Format.php');
+
+?>
+
+<?php 
+    
+ class Product{ 
+     private $db;
+     private $fm;
+
+	public function __construct(){
+        $this->db = new Database();
+        $this->fm = new Format();
+	} 
+
+/*
+Product Insert function
+--------------------------------------------- 
+*/
+
+public function productInsert( $data,$file ){
+    $productName     = mysqli_real_escape_string($this->db->link,$data['productName']);
+    $catId           = mysqli_real_escape_string($this->db->link,$data['catId']);
+    $brandId         = mysqli_real_escape_string($this->db->link,$data['brandId']);
+    $description     = mysqli_real_escape_string($this->db->link,$data['description']);
+    $price           = mysqli_real_escape_string($this->db->link,$data['price']);
+    $type            = mysqli_real_escape_string($this->db->link,$data['type']);
+
+
+        $permited  = array( 'jpg','jpeg', 'png', 'gif');
+        $file_name = $file['image']['name'];
+        $file_size = $file['image']['size'];
+        $file_temp = $file['image']['tmp_name'];
+
+        $div = explode('.', $file_name);
+        $file_ext = strtolower(end($div));
+        $unique_image = substr(md5(time()), 0, 10).'.'.$file_ext;
+        $uploaded_image = "upload/".$unique_image;
+
+        if( $productName=="" ||  $catId=="" ||  $brandId=="" ||  $description=="" ||  $price=="" ||  $type=="" || $file_name=="" ){
+        	$msg = '<div class="alert alert-danger"><strong>Error ! </strong>Field must not be empty</div>';
+           return $msg ;
+        }
+
+        elseif ($file_size >1048567) {
+	         $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Image Size should be less then 1MB!</div>';
+             return $msg;
+        }
+
+         elseif (in_array($file_ext, $permited) === false) {
+	         $msg = '<div class="alert alert-danger"><strong>Error ! </strong>You can upload only:-'
+	         .implode(', ', $permited).'</div>';
+
+             return $msg;
+        }
+
+        else{
+        	move_uploaded_file($file_temp, $uploaded_image);
+        	$query = "INSERT INTO tbl_product(productName,catId,brandId,description,price,image,type) 
+        	VALUES( '$productName','$catId','$brandId','$description','$price','$uploaded_image','$type' ) ";
+
+		        $insert_row = $this->db->insert($query);
+		       if($insert_row){
+		       	    $msg = '<div class="alert alert-success"><strong>Success ! </strong>Product Inserted Successfully</div>';
+		       	    return $msg;
+		       }
+		       else{
+		           $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Product Not Inserted .</div>';
+		       	    return $msg;
+		       }
+
+        }
+
+
+}
+
+
+public function getAllProduct(){
+
+   // Query with aliases----------
+    
+   $query = " SELECT p.*,c.catName,b.brandName FROM 
+              tbl_product as p, tbl_category as c,tbl_brand as b
+              WHERE p.catId = c.catId AND p.brandId = b.brandId 
+              ORDER BY p.productId DESC " ;
+
+   // $query = "SELECT tbl_product.* , tbl_category.catName , tbl_brand.brandName
+   //           FROM tbl_product
+   //           INNER JOIN  tbl_category ON tbl_product.catId = tbl_category.catId
+   //           INNER JOIN  tbl_brand    ON tbl_product.brandId = tbl_brand.brandId
+
+   //           ORDER BY tbl_product.productId DESC";
+
+   $result = $this->db->select($query);
+   return $result;
+
+}
+
+/*
+Product Update function
+--------------------------------------------- 
+*/
+
+public function getProductById($id){
+     $query = "SELECT *FROM tbl_product WHERE productId='$id' ";
+     $result = $this->db->select($query);
+     return $result;
+}
+
+public function productUpdate( $data,$file,$id ) {
+
+    $productName     = mysqli_real_escape_string($this->db->link,$data['productName']);
+    $catId           = mysqli_real_escape_string($this->db->link,$data['catId']);
+    $brandId         = mysqli_real_escape_string($this->db->link,$data['brandId']);
+    $description     = mysqli_real_escape_string($this->db->link,$data['description']);
+    $price           = mysqli_real_escape_string($this->db->link,$data['price']);
+    $type            = mysqli_real_escape_string($this->db->link,$data['type']);
+
+
+        $permited  = array( 'jpg','jpeg', 'png', 'gif');
+        $file_name = $file['image']['name'];
+        $file_size = $file['image']['size'];
+        $file_temp = $file['image']['tmp_name'];
+
+        $div = explode('.', $file_name);
+        $file_ext = strtolower(end($div));
+        $unique_image = substr(md5(time()), 0, 10).'.'.$file_ext;
+        $uploaded_image = "upload/".$unique_image;
+
+        if( $productName=="" ||  $catId=="" ||  $brandId=="" ||  $description=="" ||  $price=="" ||  $type==""){
+          $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Field must not be empty</div>';
+           return $msg ;
+        }
+
+        else{
+
+            if(!empty($file_name) ){ 
+
+                   if ($file_size >1048567) {
+                   $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Image Size should be less then 1MB!</div>';
+                     return $msg;
+                       }
+
+                  elseif (in_array($file_ext, $permited) === false) {
+                   $msg = '<div class="alert alert-danger"><strong>Error ! </strong>You can upload only:-'
+                   .implode(', ', $permited).'</div>';
+
+                     return $msg;
+                       }
+
+                  else{
+                      move_uploaded_file($file_temp, $uploaded_image);
+                      
+                      $query = "UPDATE  tbl_product SET 
+                           productName    = '$productName',
+                           catId          = '$catId',
+                           brandId        = '$brandId',
+                           description    = '$description',
+                           price          = '$price',  
+                           image          = '$uploaded_image',
+                           type           =  '$type' WHERE productId = '$id'  ";
+
+
+                       $update_row = $this->db->update($query);
+                       if($update_row){
+                            $msg = '<div class="alert alert-success"><strong>Success ! </strong>Product Updated Successfully</div>';
+                            return $msg;
+                       }
+                       else{
+                           $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Product Not Updated .</div>';
+                            return $msg;
+                       }
+
+                  }
+
+             } else{
+                    $query = "UPDATE  tbl_product SET 
+                           productName    = '$productName',
+                           catId          = '$catId',
+                           brandId        = '$brandId',
+                           description    = '$description',
+                           price          = '$price', 
+                           type           =  '$type' WHERE productId = '$id'  ";
+
+
+                       $update_row = $this->db->update($query);
+                       if($update_row){
+                            $msg = '<div class="alert alert-success"><strong>Success ! </strong>Product Updated Successfully</div>';
+                            return $msg;
+                       }
+                       else{
+                           $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Product Not Updated .</div>';
+                            return $msg;
+                       } 
+             }
+
+      }
+
+}
+
+
+/*
+Product Delete function
+--------------------------------------------- 
+*/
+
+public function delProductById($id){
+
+   $getquery = "SELECT * FROM tbl_product WHERE productId='$id'  ";
+   $getdata = $this->db->select($getquery);
+
+   if($getdata){
+      while( $delimg = $getdata->fetch_assoc() ){
+         $dellink = $delimg['image'];
+         unlink($dellink);            
+      }
+   }
+
+   $query = "DELETE FROM tbl_product WHERE productId='$id'  ";
+   $deldata = $this->db->delete($query);
+   
+   if( $deldata ){
+      $msg = '<div class="alert alert-success"><strong>Success ! </strong>Product Deleted Successfully</div>';
+      return $msg;
+   }
+   else{
+           $msg = '<div class="alert alert-danger"><strong>Error ! </strong>Product Not Deleted .</div>';
+            return $msg;
+       }
+
+
+}
+
+/*
+Show product in front-end
+--------------------------------------------- 
+*/
+
+public function getFeaturedProduct(){
+   $query = "SELECT * FROM tbl_product WHERE type='0' ORDER BY productId DESC LIMIT 4 " ;
+   $result = $this->db->select($query);
+   return $result;
+}
+
+
+
+
+}
+
+?>
