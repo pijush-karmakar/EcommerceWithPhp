@@ -305,6 +305,114 @@ public function productByCategory( $id ){
        return $result;
 }
 
+public function insertCompareData($productId,$customerId){
+   $customerId  = mysqli_real_escape_string( $this->db->link,$customerId );
+   $productId  = mysqli_real_escape_string( $this->db->link,$productId );
+   
+    $cQuery = "SELECT * FROM tbl_compare WHERE customerId = '$customerId' AND productId = '$productId' ";
+    $chkQuery = $this->db->select($cQuery);
+    if( $chkQuery ){
+         $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Product Already Added .</div>';
+        return $msg;
+    }
+
+    $query = "SELECT * FROM tbl_product WHERE productId = '$productId' ";
+    $result = $this->db->select($query)->fetch_assoc();
+
+    if( $result ){
+       
+          $productId = $result['productId'];
+          $productName = $result['productName'];
+          $price = $result['price'] ;
+          $image = $result['image'];
+
+          $query = " INSERT INTO tbl_compare(customerId,productId,productName,price,image) 
+                     VALUES( '$customerId','$productId','$productName','$price','$image') ";
+
+          $insert_row = $this->db->insert($query);
+          if($insert_row){
+                $msg = '<div class="alert alert-success"><strong>Success ! </strong>Added to compare Successfully</div>';
+                return $msg;
+           }
+           else{
+               $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Not Added .</div>';
+                return $msg;
+           }
+
+       }
+
+}
+
+
+public function getCompareProduct($customerId){
+     $query   = "SELECT * FROM tbl_compare WHERE customerId = '$customerId' ";
+     $result  = $this->db->select($query);
+     return $result; 
+}
+
+public function delCustomerCompare($customerId){
+   $query = "DELETE FROM tbl_compare WHERE customerId = '$customerId' ";
+   $result  = $this->db->delete($query);
+     return $result;
+}
+
+public function wishlistData($id,$customerId){
+    $cQuery = "SELECT * FROM tbl_wlist WHERE customerId = '$customerId' AND productId = '$id' ";
+    $chkQuery = $this->db->select($cQuery);
+    if( $chkQuery ){
+         $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Already Added .</div>';
+        return $msg;
+    }
+
+
+   $customerId  = mysqli_real_escape_string( $this->db->link,$customerId );
+   $id = mysqli_real_escape_string( $this->db->link,$id );
+
+    $query = "SELECT * FROM tbl_product WHERE productId = '$id' ";
+    $result = $this->db->select($query)->fetch_assoc();
+
+    if( $result ){
+       
+          $productId = $result['productId'];
+          $productName = $result['productName'];
+          $price = $result['price'] ;
+          $image = $result['image'];
+
+          $query = " INSERT INTO tbl_wlist(customerId,productId,productName,price,image) 
+                     VALUES( '$customerId','$productId','$productName','$price','$image') ";
+
+          $insert_row = $this->db->insert($query);
+
+          if($insert_row){
+                $msg = '<div class="alert alert-success"><strong>Success ! </strong>Save to Whislist Successfully</div>';
+                return $msg;
+           }
+           else{
+                $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Not Added to Whislist.</div>';
+                return $msg;
+           }
+
+       }
+
+}
+
+public function getWlistProduct($customerId){
+     $query   = "SELECT * FROM tbl_wlist WHERE customerId = '$customerId' ORDER BY id DESC ";
+     $result  = $this->db->select($query);
+     return $result;
+}
+
+public function delWlistProduct($productId,$customerId){
+      $query = "DELETE FROM tbl_wlist WHERE customerId = '$customerId' AND productId='$productId' ";
+      $result  = $this->db->delete($query);
+      return $result;
+}
+
+
+
+
+
+
 
 
 }

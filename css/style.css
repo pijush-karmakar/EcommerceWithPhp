@@ -32,6 +32,8 @@ body{
 ------------------------------
 */
 
+   
+
 .productDetails{
 	margin-top: 18px;
 }
@@ -50,17 +52,54 @@ body{
 	padding:15px 0;
 }
 .alert.alert-success {
-    color: green;
-    background: #c4e6c5;
+    color: #fff;
+    border-radius: 3px;
+    background: #28a745;
     padding: 10px;
     border: 1px solid #93c395;
 }
 .alert.alert-danger {
-    color: red;
-    background: antiquewhite;
+    color: #fff;
+    border-radius: 3px;
+    background: #dc3545;
     padding: 10px;
     border: 1px solid #f5dfc2;
 }
+.payment h2 {
+    margin-bottom: 50px;
+    border-bottom: 2px solid #ddd;
+    padding: 6px;
+}
+.payment {
+    width: 500px;
+    margin: 0 auto;
+    text-align: center;
+    border: 2px solid #ddd;
+    padding: 40px;
+    min-height: 150px;
+}
+
+.payment a {
+    background:#28a745;
+    color: #fff;
+    padding: 12px 25px;
+    margin: 0 5px;
+    border-radius: 4px;
+}
+.back {
+    text-align: center;
+    margin-top: 22px;
+}
+
+.back a {
+    background: #333;
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+
+
 
 
 /*-----------------------------*/
@@ -1437,7 +1476,7 @@ p.note{
   border-bottom: 1px solid #ddd;
   font-size: 30px;
   margin-bottom: 20px;
-  width: 141px;
+  width: auto;
 }
 .tblone {
   border: 1px solid #fff;

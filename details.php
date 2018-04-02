@@ -2,21 +2,33 @@
 
 <?php 
 
-if( !isset($_GET['productid']) || $_GET['productid']==NULL ){
-    echo '<script>window.location = "404.php";</script>';
-}
-else{
+if( isset($_GET['productid']) ){
+
    $id = preg_replace('/[^-a-zA-Z0-9_]/', '',  $_GET['productid'] );
 }
 
-if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
+if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['submit']) ){
 	$quantity = $_POST['quantity'];
 	$addCart  = $ct->addToCart( $quantity,$id );
 }
 
-
 ?>
+<?php  
+     $customerId = Session::get("customerId");
+     if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['compare']) ) {
+       $productId = $_POST['productId'];
+       $insertCompare = $pd->insertCompareData($productId,$customerId);
+   }
 
+ ?>
+
+<?php  
+    
+     if( $_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['wlist']) ) {
+       $saveList = $pd->wishlistData($id,$customerId);
+   }
+
+ ?>
 
 <div class="main">
     <div class="content">
@@ -42,18 +54,60 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' ){
                         <p>Category: <span><?php echo $result['catName']; ?></span></p>
                         <p>Brand:<span><?php echo $result['brandName']; ?></span></p>
                     </div>
+
                     <div class="add-cart">
                         <form action="" method="post">
-                            <input type="number" class="buyfield" name="quantity" value="<?php echo $result['quantity']; ?>" placeholder="product quantity" />
+                            <input type="number" class="buyfield" name="quantity" value="1" value="<?php echo $result['quantity']; ?>" placeholder="product quantity" />
                             <input type="submit" class="buysubmit" name="submit" value="Buy Now" />
                         </form>
                     </div>
+                  
                     <span style="color: red; font-size: 18px; display: block; margin-top: 15px;"><?php 
 
                      if( isset($addCart) ){
                      	echo $addCart;
                      }
 				 ?></span>
+            
+          <?php 
+              if( isset($insertCompare) ){
+                 echo $insertCompare;
+              }
+
+              if( isset($saveList) ){
+                echo $saveList;
+              }
+
+           ?>
+            <?php 
+
+                        $login =  Session::get("customerLogin");
+                        if( $login == true ){ 
+
+             ?>
+ <style>
+   .sub-button{
+      float: left;
+      margin-right: 10px;
+   }
+ </style>        
+        <div class="add-cart">
+             <div class="sub-button">
+                 <form action="" method="post">
+                    <input type="hidden" class="buyfield" name="productId" value="<?php echo $result['productId']; ?>" />
+                    <input type="submit" class="buysubmit" name="compare" value="ADD to Compare" />
+                </form>
+             </div>
+             
+             <div class="sub-button">
+                <form action="" method="post">
+                    <input type="submit" class="buysubmit" name="wlist" value="Save to Whislist" />
+                </form>
+             </div>
+        </div>
+
+
+  <?php } ?>
                 </div>
                 <div class="product-desc">
 

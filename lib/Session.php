@@ -41,13 +41,13 @@
      public static function checkLogin(){
       self::init();
       if (self::get("adminlogin")== true) {
-       header("Location:dashboard.php");
+         header("Location:dashboard.php");
       }
      }
 
-     public static function destroy(){
-      session_destroy();
-      header("Location:login.php");
+    public static function destroy(){
+         session_destroy();
+         header("Location:login.php");
      }
     }
 

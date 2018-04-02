@@ -89,8 +89,8 @@
                                         <img src="dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
 
                                         <p>
-                                            Alexander Pierce - Web Developer
-                                            <small>Member since Nov. 2012</small>
+                                            pijush karmakar - Web Developer
+                                            <small>Serious since 2015</small>
                                         </p>
                                     </li>
                                     <!-- Menu Body -->

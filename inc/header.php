@@ -82,8 +82,10 @@ Session::init();
 						</div>
 			      </div>
 		<?php 
+		 $customerId = Session::get("customerId");
 		   if( isset($_GET['cid']) ){
 		   	  $delData = $ct->delCustomerCart();
+		   	  $delCompareData = $pd->delCustomerCompare($customerId);
 		   	  Session::destroy();
 		   }
 
@@ -111,7 +113,6 @@ Session::init();
 <div class="menu">
 	<ul id="dc_mega-menu-orange" class="dc_mm-orange">
 	  <li><a href="index.php">Home</a></li>
-	  <li><a href="products.php">Products</a> </li>
 	  <li><a href="topbrands.php">Top Brands</a></li>
 
 <?php 
@@ -119,6 +120,15 @@ Session::init();
   if( $chkCart ){
  ?> 	
     <li><a href="cart.php">Cart</a></li>
+    <li><a href="payment.php">Payment</a></li>
+ <?php } ?>
+
+<?php 
+  $customerId = Session::get("customerId");
+  $chkOrder = $ct->checkOrderTable($customerId);
+  if( $chkOrder ){
+ ?> 	
+    <li><a href="orderdetails.php">Order Details</a></li>
  <?php } ?>
 
 <?php 
@@ -130,7 +140,25 @@ Session::init();
    	<li><a href="profile.php">Profile</a></li>
 
 <?php } ?>
-	
+
+<?php 
+
+ $customerId = Session::get("customerId");
+     $CompareProduct = $pd->getCompareProduct($customerId);
+     if($CompareProduct){
+
+ ?>
+	  <li><a href="compare.php">Compare</a> </li>
+<?php } ?>	
+
+<?php 
+
+     $wishlistProduct = $pd->getWlistProduct($customerId);
+     if($wishlistProduct){
+
+ ?>
+	  <li><a href="wishlist.php">Wishlist</a> </li>
+<?php } ?> 
 	  <li><a href="contact.php">Contact</a> </li>
 	  <div class="clear"></div>
 	</ul>

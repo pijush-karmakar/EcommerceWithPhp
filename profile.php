@@ -10,6 +10,7 @@
  ?>
 
 <style>
+
 .tblone{ 
    margin: 0 auto;
    width: 600px;
@@ -20,7 +21,7 @@
  .tblone tr td{
     text-align: justify;
     padding: 10px;
- }    
+ } 
 
 </style>
 

@@ -89,6 +89,18 @@
 
             <li class="treeview">
                 <a href="#">
+                    <i class="fa fa-cube"></i> <span>Order Details</span>
+                    <span class="pull-right-container">
+              <i class="fa fa-plus-square pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="customerorder.php"><i class="fa fa-pencil-square-o"></i>Customer Order</a></li>
+                </ul>
+            </li>
+
+            <li class="treeview">
+                <a href="#">
                     <i class="fa fa-laptop"></i> <span>Brand</span>
                     <span class="pull-right-container">
               <i class="fa fa-plus-square pull-right"></i>

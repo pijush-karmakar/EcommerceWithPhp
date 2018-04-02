@@ -8,8 +8,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            Fixed Layout
-            <small>Blank example to the fixed layout</small>
+            Dashboard
+            <small>Welcome to Admin Panel</small>
         </h1>
     </section>
 

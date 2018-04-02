@@ -115,6 +115,130 @@ public function delCustomerCart(){
     $this->db->delete($query);
 }
 
+public function orderProduct( $customerId){
+    $sId = session_id();
+    $query = "SELECT * FROM tbl_cart WHERE sId = '$sId' ";
+    $getOrderPro = $this->db->select($query);
+
+    if( $getOrderPro ){
+       while ( $result = $getOrderPro->fetch_assoc() ) {
+          $productId = $result['productId'];
+          $productName = $result['productName'];
+          $quantity = $result['quantity'];
+          $price = $result['price'] * $quantity ;
+          $image = $result['image'];
+
+          $query = " INSERT INTO tbl_order(customerId,productId,productName,price,quantity,image) 
+                     VALUES( '$customerId','$productId','$productName','$price','$quantity','$image') ";
+
+          $insert_row = $this->db->insert($query);
+
+       }
+    }
+
+
+}
+
+
+public function payableAmount($customerId){
+      $query = "SELECT price FROM tbl_order WHERE customerId = '$customerId' AND date  ";
+      $result = $this->db->select($query);
+      return $result; 
+}
+
+public function retrieveOrderProduct($customerId){
+      $query = "SELECT * FROM tbl_order WHERE customerId = '$customerId' ORDER BY date DESC ";
+      $result = $this->db->select($query);
+      return $result; 
+}
+
+public function checkOrderTable($customerId){
+    $query = "SELECT * FROM tbl_order WHERE customerId = '$customerId' ";
+    $result = $this->db->select($query);
+    return $result;
+}
+
+public function getCustomerOrder(){
+    $query = "SELECT * FROM tbl_order ORDER BY date DESC";
+    $result = $this->db->select($query);
+    return $result;
+}
+
+public function productShifted($id,$price,$date){
+    $id       = mysqli_real_escape_string($this->db->link,$id);
+    $price       = mysqli_real_escape_string($this->db->link,$price);
+    $date       = mysqli_real_escape_string($this->db->link,$date);
+             
+           $query = "UPDATE tbl_order 
+              SET status = '1'
+
+              WHERE customerId = '$id' AND date='$date' AND price='$price' ";
+              $Update_row = $this->db->update( $query );
+
+              if($Update_row){
+                  $msg = '<div class="alert alert-success"><strong>Success ! </strong> Updated Successfully</div>';
+                  return $msg;
+             }
+             else{
+                 $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Not Updated .</div>';
+                  return $msg;
+             }
+
+
+
+
+}
+
+
+public function delProductShifted($id,$price,$date){
+    $id       = mysqli_real_escape_string($this->db->link,$id);
+    $price       = mysqli_real_escape_string($this->db->link,$price);
+    $date       = mysqli_real_escape_string($this->db->link,$date);
+    
+    $query = "DELETE FROM tbl_order  WHERE customerId = '$id' AND date='$date' AND price='$price' ";
+     $deldata = $this->db->delete($query);
+     if( $deldata ){
+        $msg = '<div class="alert alert-success"><strong>Success ! </strong> Deleted Successfully</div>';
+        return $msg;
+     }
+     else{
+             $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Not Deleted .</div>';
+              return $msg;
+         }
+
+
+}
+
+
+public function confirmProductShift($id,$price,$date){
+
+    $id          =   mysqli_real_escape_string($this->db->link,$id);
+    $price       =   mysqli_real_escape_string($this->db->link,$price);
+    $date        =   mysqli_real_escape_string($this->db->link,$date);
+             
+           $query = "UPDATE tbl_order 
+              SET status = '2'
+
+              WHERE customerId = '$id' AND date='$date' AND price='$price' ";
+              $Update_row = $this->db->update( $query );
+
+              if($Update_row){
+                  $msg = '<div class="alert alert-success"><strong>Success ! </strong> Updated Successfully</div>';
+                  return $msg;
+             }
+             else{
+                 $msg = '<div class="alert alert-danger"><strong>Error ! </strong> Not Updated .</div>';
+                  return $msg;
+             }
+}
+
+
+
+
+
+
+
+
 
 
 

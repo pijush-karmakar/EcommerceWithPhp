@@ -143,7 +143,6 @@
                 <?php }
 					   else{
 					   	   header('Location:index.php');
-					     	// echo 'Cart Empty ! Please Shop now.';
 					       } 
 
 					   ?>
@@ -154,7 +153,7 @@
                     <a href="index.php"> <img src="images/shop.png" alt="" /></a>
                 </div>
                 <div class="shopright">
-                    <a href="login.php"> <img src="images/check.png" alt="" /></a>
+                    <a href="payment.php"> <img src="images/check.png" alt="" /></a>
                 </div>
             </div>
         </div>
